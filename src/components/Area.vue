@@ -40,12 +40,12 @@
               <v-list-tile-title>{{area.number}} - {{area.name}}</v-list-tile-title>                     
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn icon ripple @click="dialog=true;oldArea=area;titleDialog='Actualizar Area'">
+              <v-btn icon ripple @click="dialog=true;oldArea=Object.assign({}, area);titleDialog='Actualizar Area'">
                 <v-icon color="green lighten-1">update</v-icon>
               </v-btn>
             </v-list-tile-action>
             <v-list-tile-action>
-              <v-btn icon ripple>
+              <v-btn icon ripple @click="deleteArea(area)">
                 <v-icon color="red lighten-1">delete</v-icon>
               </v-btn>
             </v-list-tile-action>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import swal from 'sweetalert2'
 export default {
   data(){
     return{
@@ -67,18 +68,115 @@ export default {
     }
   },
   mounted(){
-    fetch('http://localhost:3000/api/areas')
-    .then(res=>res.json())
-    .then(data=>this.areas=data)
+    this.getAreas()
   },
   methods:{
     execDialog(){
       this.dialog=false;
       if(this.oldArea._id){
-        console.log("actualizar")
+
+        fetch('http://localhost:3000/api/areas/'+this.oldArea._id,{
+          method:'put',
+          headers:{
+            'Content-Type': 'application/json',
+            'authorization':localStorage.getItem('Opema-Token')
+          },
+          body: JSON.stringify(this.oldArea)
+        })
+        .then(res=>res.json())
+        .then(res=>{
+          if(res.success){
+            swal(
+              'Actualizado!',
+              'Se actualizo correctamente',
+              'success'
+            )
+            this.getAreas()
+          }else{
+             swal(
+              'Error!',
+              `Error: ${res.message} : ${res.error.errmsg}`,
+              'error'
+            )
+          }
+        })
       }else{
-        console.log("nuevo")
+        fetch('http://localhost:3000/api/areas',{
+          method:'post',
+          headers:{
+            'Content-Type': 'application/json',
+            'authorization':localStorage.getItem('Opema-Token')
+          },
+          body: JSON.stringify(this.oldArea)
+        })
+        .then(res=>res.json())
+        .then(res=>{
+          if(res.success){
+            swal(
+              'Añadido!',
+              'Agregado correctamente',
+              'success'
+            )
+            this.getAreas()
+          }else{
+            swal(
+              'Error!',
+              `Error: ${res.message} : ${res.error.errmsg}`,
+              'error'
+            )
+          }
+        })
       }
+    },
+    getAreas(){
+      fetch('http://localhost:3000/api/areas',{
+        method:'get',
+        headers:{
+          'authorization':localStorage.getItem('Opema-Token')
+        }
+      })
+      .then(res=>res.json())
+      .then(data=>this.areas=data)
+    },
+    deleteArea(area){
+      swal({
+        title: 'Estás seguro?',
+        text: `Eliminaras el área: ${area.name}`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar!'
+      }).then((result) => {
+        if (result.value) {
+          fetch('http://localhost:3000/api/areas/'+area._id,{
+            method:'delete',
+            headers:{
+              'Content-Type': 'application/json',
+              'authorization':localStorage.getItem('Opema-Token')
+            },
+          })
+          .then(res=>res.json())
+          .then(res=>{
+            if(res.success){
+              swal(
+                'Eliminado!',
+                'Se ha eliminado!',
+                'success'
+              )
+              this.getAreas()
+            }else{  
+              swal(
+                'Error!',
+                `Error: ${res.message}`,
+                'error'
+              )
+            }
+          })
+          
+        }
+      })
     }
   }
 }

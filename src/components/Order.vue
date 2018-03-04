@@ -19,23 +19,25 @@
                     <v-flex xs12 sm6 md4>
                       <v-text-field label="# Pedido" required></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm8>
+                    <v-flex xs12 sm6 md8>
                       <v-select
                         label="Area"
                         required
-                        :items="areas.map(area=>area.name)"
+                        :items="areas"
+                        item-text="name"
+                        item-value="area"
                       ></v-select>
                     </v-flex>
                     <v-flex xs12>
                       <v-text-field label="Descripción" required></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
+                    <v-flex xs12 sm4 md4>
                       <v-text-field label="Cantidad" required></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
+                    <v-flex xs12 sm4 md4>
                       <v-text-field label="Unidades" required></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
+                    <v-flex xs12 sm4 md4>
                       <v-text-field
                         label="Tipo"
                         required
@@ -124,7 +126,12 @@ export default {
       areas:[]
     }),    
     mounted(){
-      fetch('http://localhost:3000/api/areas')
+      fetch('http://localhost:3000/api/areas',{
+        method:'get',
+        headers:{
+          'authorization':localStorage.getItem('Opema-Token')
+        }
+      })
       .then(res=>res.json())
       .then(data=>this.areas=data)
     }

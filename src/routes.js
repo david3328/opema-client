@@ -18,12 +18,15 @@ export const routes=[
     children:[
       {
         path:'orders',
-        component:Order
+        component:Order,
+        meta:{reqAuth:true}
       },
       {
         path:'areas',
-        component:Area
+        component:Area,
+        meta:{reqAuth:true}
       }
-    ]
+    ],
+    meta:{reqAuth:true}
   }
 ]
