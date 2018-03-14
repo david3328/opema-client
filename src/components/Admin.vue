@@ -22,6 +22,14 @@
             <v-list-tile-title>Pedidos</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile @click="$router.replace('/admin/new-order')">
+          <v-list-tile-action>
+            <v-icon>contact_mail</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Nuevo Pedido</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile @click="logOut()">
           <v-list-tile-action>
             <v-icon color="red">clear</v-icon>
@@ -37,7 +45,7 @@
       <v-toolbar-title>Administrador</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height>
+      <v-container >
         <transition name="fade">
           <router-view></router-view>
         </transition>

@@ -1,139 +1,159 @@
 <template>
-  <v-layout row>
-    <v-flex xs12 sm6>
-      <v-expansion-panel>
-        <v-toolbar color="indigo" dark>
-          <v-toolbar-title>Pedidos</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" persistent max-width="500px">
-            <v-btn icon dark slot="activator">
-              <v-icon>add</v-icon>
+<div>
+  <v-layout row justify-center>
+    <v-dialog
+        v-model="dialog"
+        fullscreen
+        transition="dialog-bottom-transition"
+        :overlay="false"
+        scrollable
+      >
+        <v-card tile>
+          <v-toolbar card dark color="primary">
+            <v-btn icon @click.native="dialog = false" dark>
+              <v-icon>close</v-icon>
             </v-btn>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Agregar Pedido</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="# Pedido" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md8>
-                      <v-select
-                        label="Area"
-                        required
-                        :items="areas"
-                        item-text="name"
-                        item-value="area"
-                      ></v-select>
-                    </v-flex>
-                    <v-flex xs12>
-                      <v-text-field label="Descripción" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm4 md4>
-                      <v-text-field label="Cantidad" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm4 md4>
-                      <v-text-field label="Unidades" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm4 md4>
-                      <v-text-field
-                        label="Tipo"
-                        required
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="COD PPTO" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="COD POMDIHMA" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-dialog
-                        ref="dialog"
-                        persistent
-                        v-model="modal"
-                        lazy
-                        full-width
-                        width="290px"
-                        :return-value.sync="date"
-                      >
-                        <v-text-field
-                          slot="activator"
-                          label="Fecha"
-                          v-model="date"
-                          prepend-icon="event"
-                          readonly
-                          required
-                        ></v-text-field>
-                        <v-date-picker v-model="date" scrollable>
-                          <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-                        </v-date-picker>
-                      </v-dialog>
-                    </v-flex>    
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="Seguimiento"></v-text-field>
-                    </v-flex>   
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="Costo Estimado" required></v-text-field>
-                    </v-flex>   
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field label="Costo Real" required></v-text-field>
-                    </v-flex>               
-                  </v-layout>
-                </v-container>
-                <small class="red--text">(*) Los campos son obligatorios</small>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="red darken-1" flat @click.native="dialog = false">Cancelar</v-btn>
-                <v-btn color="green darken-1" flat @click.native="dialog = false">Guardar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-menu bottom left>
-            <v-btn icon slot="activator" dark>
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-            <v-list>
-              <v-list-tile>
-                <v-list-tile-title>Exportar a Excel</v-list-tile-title>
+            <v-toolbar-title>Pedido #{{order.number}}</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-list two-line>
+              <v-subheader>General</v-subheader>             
+              <v-list-tile row justify-center>
+                <v-list-tile-content>
+                  <v-list-tile-title >Tipo</v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.type}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Código POI </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.codpoi}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Código POMDIHMA </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.codpomdihma}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Fecha </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.orderDate}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Fecha Atendido </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.servedDate}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Fecha Compra/Servicio </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.serviceDate}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                 <v-list-tile-content>
+                  <v-list-tile-title >Area </v-list-tile-title>
+                  <v-list-tile-sub-title>{{order.area.name}}</v-list-tile-sub-title>
+                </v-list-tile-content>
               </v-list-tile>
             </v-list>
-          </v-menu>
-        </v-toolbar>
-        <v-expansion-panel-content v-for="(item,i) in 5" :key="i">
-          <div slot="header">Item</div>
-          <v-card>
-            <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-flex>
+            <v-data-table
+              :headers="orderHeaders"
+              :items="order.details"
+              hide-actions
+              class="elevation-1"
+            >
+              <template slot="items" slot-scope="props">
+                <td>{{ props.item.description }}</td>
+                <td class="text-xs-left">{{ props.item.quantity }}</td>
+                <td class="text-xs-left">{{ props.item.unit }}</td>
+                <td class="text-xs-left">{{ props.item.tracing }}</td>
+                <td class="text-xs-left">{{ props.item.estimatedCost }}</td>
+                <td class="text-xs-left">{{ props.item.realCost }}</td>
+              </template>
+            </v-data-table>
+          </v-card-text>
+
+        </v-card>
+      </v-dialog>
+  <v-data-table
+    :headers="headers"
+    :items="orders"
+    hide-actions
+    class="elevation-1"
+  >
+    <template slot="items" slot-scope="props">
+      <td>{{ props.item.number }}</td>
+      <td class="text-xs-left">{{ props.item.type }}</td>
+      <td class="text-xs-left">{{ props.item.codpoi }}</td>
+      <td class="text-xs-left">{{ props.item.codpomdihma }}</td>
+      <td class="text-xs-lett">{{ props.item.orderDate.substring(0,10)}}</td>
+      <td class="text-xs-left">{{ props.item.serverdDate }}</td>
+      <td class="text-xs-left">{{ props.item.serviceDate }}</td>
+      <td class="text-xs-left">{{ props.item.area.name }}</td>
+       <td class="justify-center layout px-0">
+          <v-btn icon class="mx-0" @click="editItem(props.item)">
+            <v-icon color="teal">more</v-icon>
+          </v-btn>
+        </td>
+    </template>
+  </v-data-table>
   </v-layout>
+</div>
 </template>
 
 <script>
-export default {
-    data: () => ({
-      dialog: false,
-      date: null,
-      menu: false,
-      modal: false,
-      areas:[]
-    }),    
+import moment from 'moment'
+  export default {
+    data () {
+      return {
+        dialog:false,
+        orderHeaders: [
+          {
+            text: 'Descripción',
+            align: 'left',
+            sortable: false,
+            value: 'description'
+          },
+          { text: 'Cantidad', value: 'quantity' },
+          { text: 'Unidad', value: 'unit' },
+          { text: 'Seguimiento', value: 'tracing' },
+          { text: 'Costo Estimado', value: 'estimatedCost' },
+          { text: 'Costo Real', value: 'realCost' }
+        ],
+        headers: [
+          {
+            text: '# Pedido',
+            align: 'left',
+            sortable: false,
+            value: 'number'
+          },
+          { text: 'Tipo', value: 'type' },
+          { text: 'COD POI', value: 'codpoi' },
+          { text: 'COD PODIHMA', value: 'codpodihma' },
+          { text: 'Fecha', value: 'orderDate' },
+          { text: 'F. Atendido', value: 'servedDate' },
+          { text: 'F. Compra/Servicio', value: 'serviceDate' },
+          { text: 'Area', value: 'area' },
+          { text: 'Actions', value: 'name', sortable: false }
+        ],
+        orders: [],
+        order:{area:{}}
+      }
+    },
     mounted(){
-      fetch('http://localhost:3000/api/areas',{
-        method:'get',
-        headers:{
-          'authorization':localStorage.getItem('Opema-Token')
-        }
-      })
-      .then(res=>res.json())
-      .then(data=>this.areas=data)
+      this.getOrders();
+      
+    },
+    methods:{
+      getOrders(){
+        fetch('http://localhost:3000/api/orders',{
+          method:'get',
+          headers:{
+            'authorization':localStorage.getItem('Opema-Token')
+          }
+        })
+        .then(res=>res.json())
+        .then(data=>{this.orders=data
+          console.log(this.orders)
+        })
+      },
+      editItem(item){
+        this.order = item;
+        this.dialog=true;
+      }
     }
   }
 </script>

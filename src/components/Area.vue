@@ -41,7 +41,7 @@
             </v-list-tile-content>
             <v-list-tile-action>
               <v-btn icon ripple @click="dialog=true;oldArea=Object.assign({}, area);titleDialog='Actualizar Area'">
-                <v-icon color="green lighten-1">update</v-icon>
+                <v-icon color="green lighten-1">edit</v-icon>
               </v-btn>
             </v-list-tile-action>
             <v-list-tile-action>

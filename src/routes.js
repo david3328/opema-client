@@ -1,6 +1,7 @@
 import Login from './components/Login'
 import Admin from './components/Admin'
 import Order from './components/Order'
+import newOrder from './components/newOrder'
 import Area from './components/Area'
 
 export const routes=[
@@ -24,6 +25,11 @@ export const routes=[
       {
         path:'areas',
         component:Area,
+        meta:{reqAuth:true}
+      },
+      {
+        path:'new-order',
+        component:newOrder,
         meta:{reqAuth:true}
       }
     ],
